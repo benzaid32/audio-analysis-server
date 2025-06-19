@@ -1,0 +1,47 @@
+# Enterprise-grade Audio Analysis Server .gitignore
+
+# Logs and temporary files
+logs/
+*.log
+build_logs.txt
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Docker related
+.dockerignore
+
+# Virtual environment
+venv/
+env/
+.venv/
+.virtualenv/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Redis data
+redis_data/
+*.rdb
+
+# Temporary audio files
+tmp_audio/
+**/tmp/
