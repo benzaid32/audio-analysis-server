@@ -174,12 +174,29 @@ async def analyze_audio_endpoint(audio: UploadFile = File(...)):
     try:
         logger.info(f"📨 Received audio file: {audio.filename}")
         
-        # Validate file type
-        if not audio.content_type.startswith('audio/'):
-            raise HTTPException(status_code=400, detail="File must be an audio file")
+        # Enterprise-grade file validation
+        if not audio.filename:
+            raise HTTPException(status_code=400, detail="No filename provided")
+            
+        # Validate file extension for audio files (more reliable than content_type)
+        valid_extensions = ['.wav', '.mp3', '.flac', '.ogg', '.m4a']
+        file_ext = os.path.splitext(audio.filename.lower())[1]
         
-        # Create temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(audio.filename)[1]) as tmp_file:
+        if file_ext not in valid_extensions:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Unsupported audio format: {file_ext}. Supported formats: {', '.join(valid_extensions)}"
+            )
+        
+        # Additional content type validation (with null safety)
+        if audio.content_type and not audio.content_type.startswith('audio/'):
+            logger.warning(f"Content type mismatch: {audio.content_type} for file {audio.filename}")
+            # Don't fail - trust the file extension for enterprise flexibility
+        
+        logger.info(f"🎵 Processing {file_ext.upper()} file: {audio.filename}")
+        
+        # Create temporary file with original extension
+        with tempfile.NamedTemporaryFile(delete=False, suffix=file_ext) as tmp_file:
             content = await audio.read()
             tmp_file.write(content)
             tmp_file_path = tmp_file.name
