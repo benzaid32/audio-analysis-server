@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     libavcodec-dev \
     libavformat-dev \
     libavutil-dev \
-    libavresample-dev \
+    libswresample-dev \
     python3-dev \
     pkg-config \
     ffmpeg \
